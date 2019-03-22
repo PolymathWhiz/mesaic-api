@@ -7,6 +7,8 @@ const Util = require('../helpers/util');
 
 const db = require('../../../db/connect');
 
+const cloudinary = require('cloudinary');
+
 exports.getStudents = async (req, res) => {
   try {
     const [students] = await db.execute("SELECT * from student");
@@ -56,22 +58,34 @@ exports.getStudents = async (req, res) => {
 
 exports.addStudent = async (req, res) => {
   try {
-    if (Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies) && Util.trim(req.body.photo_url)) {
+
+    if (req.file === undefined) {
+      return res.status(400).json({
+        status: false,
+        message: 'Invalid file submitted.'
+      });
+    }
+
+    const fileObj = req.file;
+    const filePublicID = fileObj.public_id;
+    const secureURL = fileObj.secure_url;
+
+    if (Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies)) {
 
       const firstName = Util.trim(req.body.first_name);
       const lastName = Util.trim(req.body.last_name);
       const birthDate = Util.trim(req.body.birth_date);
       const hobbies = Util.trim(req.body.hobbies);
-      const photoURL = Util.trim(req.body.photo_url);
 
       if (!Util.isValidDate(birthDate)) {
+        cloudinary.v2.uploader.destroy(filePublicID)
         return res.status(400).json({
           success: false,
           message: 'Invalid date'
         });
       }
 
-      await db.execute("INSERT INTO student (first_name, last_name, birth_date, hobbies, photo, created_at) VALUES (?, ?, ?, ?, ?, NOW()) ", [firstName, lastName, birthDate, hobbies, photoURL]);
+      await db.execute("INSERT INTO student (first_name, last_name, birth_date, hobbies, photo, created_at) VALUES (?, ?, ?, ?, ?, NOW()) ", [firstName, lastName, birthDate, hobbies, secureURL]);
 
       return res.status(201).json({
         success: true,
@@ -79,6 +93,7 @@ exports.addStudent = async (req, res) => {
       });
 
     } else {
+      cloudinary.v2.uploader.destroy(filePublicID)
       return res.status(400).json({
         success: false,
         message: 'Invalid parameters specified'
@@ -92,13 +107,37 @@ exports.addStudent = async (req, res) => {
 
 exports.editStudent = async (req, res) => {
   try {
+    if (req.file === undefined) {
+      return res.status(400).json({
+        status: false,
+        message: 'Invalid file submitted.'
+      });
+    }
+
+    const fileObj = req.file;
+    const filePublicID = fileObj.public_id;
+    const secureURL = fileObj.secure_url;
+
     if (Util.trim(req.body.id) && Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies)) {
       const id = Util.trim(req.body.id);
+      const firstName = Util.trim(req.body.first_name);
+      const lastName = Util.trim(req.body.last_name);
+      const birthDate = Util.trim(req.body.birth_date);
+      const hobbies = Util.trim(req.body.hobbies);
+
+      if (!Util.isValidDate(birthDate)) {
+        cloudinary.v2.uploader.destroy(filePublicID)
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid date'
+        });
+      }
 
       // validate student
       const [isValidStudent] = await db.execute("SELECT id FROM student WHERE id = ? ", [id]);
 
       if (isValidStudent.length === 0) {
+        cloudinary.v2.uploader.destroy(filePublicID);
         return res.status(404).json({
           success: false,
           message: 'The requested student was not found'
@@ -106,8 +145,15 @@ exports.editStudent = async (req, res) => {
       }
 
       //  student is valid
+      await db.execute("UPDATE student SET first_name = ?, last_name = ?, birth_date = ?, hobbies = ?, photo = ?", [firstName, lastName, birthDate, hobbies, secureURL]);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully updated student'
+      });
 
     } else {
+      cloudinary.v2.uploader.destroy(filePublicID)
       return res.status(400).json({
         success: false,
         message: 'Invalid parameters specified'

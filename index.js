@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require('cors');
-// const cloudinary = require('cloudinary');
+const cloudinary = require('cloudinary');
 const port = 3000 || process.env.PORT;
 const pkg = require("./package.json");
 
@@ -22,6 +22,13 @@ app.use(
 );
 
 app.use(express.json());
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 
 // Exposed routes
 app.get("/", (req, res) => {
