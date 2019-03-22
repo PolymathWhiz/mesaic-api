@@ -1,0 +1,35 @@
+{
+  "name": "mesaic-api",
+  "version": "1.0.0",
+  "description": "API for Mesaic test app",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "stop": "killall node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PolymathWhiz/mesaic-api.git"
+  },
+  "keywords": [
+    "node",
+    "api"
+  ],
+  "author": "Miracle Anyanwu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PolymathWhiz/mesaic-api/issues"
+  },
+  "homepage": "https://github.com/PolymathWhiz/mesaic-api#readme",
+  "dependencies": {
+    "cloudinary": "^1.13.2",
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "multer": "^1.4.1",
+    "multer-storage-cloudinary": "^2.2.1",
+    "mysql2": "^1.6.5",
+    "nodemon": "^1.18.10"
+  }
+}
