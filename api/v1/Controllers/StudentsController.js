@@ -118,8 +118,8 @@ exports.editStudent = async (req, res) => {
     const filePublicID = fileObj.public_id;
     const secureURL = fileObj.secure_url;
 
-    if (Util.trim(req.body.id) && Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies)) {
-      const id = Util.trim(req.body.id);
+    if (Util.trim(req.params.id) && Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies)) {
+      const id = Util.trim(req.params.id);
       const firstName = Util.trim(req.body.first_name);
       const lastName = Util.trim(req.body.last_name);
       const birthDate = Util.trim(req.body.birth_date);
