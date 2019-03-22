@@ -91,7 +91,61 @@ exports.addStudent = async (req, res) => {
 };
 
 exports.editStudent = async (req, res) => {
-  
+  try {
+    if (Util.trim(req.body.id) && Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies) && ) {
+      const id = Util.trim(req.body.id);
+
+      // validate student
+      const [isValidStudent] = await db.execute("SELECT id FROM student WHERE id = ? ", [id]);
+
+      if (isValidStudent.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'The requested student was not found'
+        });
+      }
+
+      //  student is valid
+
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid parameters specified'
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
 };
 
-exports.deleteStudent = async (req, res) => {};
+exports.deleteStudent = async (req, res) => {
+  try {
+    if (Util.trim(req.body.id)) {
+      const id = Util.trim(req.body.id);
+
+      // validate student
+      const [isValid] = await db.execute("SELECT id FROM student WHERE id = ?", [id]);
+
+      if (isValid === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'The requested student was not found'
+        });
+      }
+
+      // delete
+      await db.execute("DELETE FROM student WHERE id = ?", [id]);
+
+      return res.sendStatus(204);
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid parameters specified'
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};
