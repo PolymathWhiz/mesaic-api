@@ -145,7 +145,7 @@ exports.editStudent = async (req, res) => {
       }
 
       //  student is valid
-      await db.execute("UPDATE student SET first_name = ?, last_name = ?, birth_date = ?, hobbies = ?, photo = ?", [firstName, lastName, birthDate, hobbies, secureURL]);
+      await db.execute("UPDATE student SET first_name = ?, last_name = ?, birth_date = ?, hobbies = ?, photo = ? WHERE id = ?", [firstName, lastName, birthDate, hobbies, secureURL, id]);
 
       return res.status(200).json({
         success: true,
