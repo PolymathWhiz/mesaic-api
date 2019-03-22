@@ -92,7 +92,7 @@ exports.addStudent = async (req, res) => {
 
 exports.editStudent = async (req, res) => {
   try {
-    if (Util.trim(req.body.id) && Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies) && ) {
+    if (Util.trim(req.body.id) && Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies)) {
       const id = Util.trim(req.body.id);
 
       // validate student
@@ -121,13 +121,13 @@ exports.editStudent = async (req, res) => {
 
 exports.deleteStudent = async (req, res) => {
   try {
-    if (Util.trim(req.body.id)) {
-      const id = Util.trim(req.body.id);
+    if (Util.trim(req.params.id)) {
+      const id = Util.trim(req.params.id);
 
       // validate student
       const [isValid] = await db.execute("SELECT id FROM student WHERE id = ?", [id]);
 
-      if (isValid === 0) {
+      if (isValid.length === 0) {
         return res.status(404).json({
           success: false,
           message: 'The requested student was not found'
