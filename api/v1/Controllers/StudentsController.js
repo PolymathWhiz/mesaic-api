@@ -3,7 +3,7 @@
   the student resource
 */
 
-// const Util = require('../helpers/util');
+const Util = require('../helpers/util');
 
 const db = require('../../../db/connect');
 
@@ -22,7 +22,7 @@ exports.getStudents = async (req, res) => {
           last_name: students[i].last_name,
           birth_date: students[i].birth_date,
           hobbies: students[i].hobbies,
-          photo_url: students[i].photo_url,
+          photo_url: students[i].photo,
           created_at: students[i].created_at,
           updated_at: students[i].updated_at
         }
@@ -54,8 +54,44 @@ exports.getStudents = async (req, res) => {
   }
 };
 
-exports.addStudent = async (req, res) => {};
+exports.addStudent = async (req, res) => {
+  try {
+    if (Util.trim(req.body.first_name) && Util.trim(req.body.last_name) && Util.trim(req.body.birth_date) && Util.trim(req.body.hobbies) && Util.trim(req.body.photo_url)) {
 
-exports.editStudent = async (req, res) => {};
+      const firstName = Util.trim(req.body.first_name);
+      const lastName = Util.trim(req.body.last_name);
+      const birthDate = Util.trim(req.body.birth_date);
+      const hobbies = Util.trim(req.body.hobbies);
+      const photoURL = Util.trim(req.body.photo_url);
+
+      if (!Util.isValidDate(birthDate)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid date'
+        });
+      }
+
+      await db.execute("INSERT INTO student (first_name, last_name, birth_date, hobbies, photo, created_at) VALUES (?, ?, ?, ?, ?, NOW()) ", [firstName, lastName, birthDate, hobbies, photoURL]);
+
+      return res.status(201).json({
+        success: true,
+        message: 'Successfully created record',
+      });
+
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid parameters specified'
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};
+
+exports.editStudent = async (req, res) => {
+  
+};
 
 exports.deleteStudent = async (req, res) => {};
