@@ -49,3 +49,7 @@ The app uses environment variables, so we need to set that up on your local mach
 `npm start`
 
 The server should start on port `8080` as that is the port the frontend app will be sending the requests to.
+
+# API Documentation
+
+[Here](https://documenter.getpostman.com/view/1269688/S17rvU91)
