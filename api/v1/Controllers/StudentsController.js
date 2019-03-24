@@ -52,7 +52,10 @@ exports.getStudents = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.sendStatus(500);
+    return res.status(500).json({
+      success: false,
+      message: 'Could not reach network'
+    });
   }
 };
 
@@ -101,7 +104,10 @@ exports.addStudent = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.sendStatus(500);
+    return res.status(500).json({
+      success: false,
+      message: 'Could not reach network'
+    });
   }
 };
 
@@ -161,7 +167,10 @@ exports.editStudent = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.sendStatus(500);
+    return res.status(500).json({
+      success: false,
+      message: 'Could not reach network'
+    });
   }
 };
 
@@ -192,6 +201,9 @@ exports.deleteStudent = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.sendStatus(500);
+    return res.status(500).json({
+      success: false,
+      message: 'Could not reach network'
+    });
   }
 };
