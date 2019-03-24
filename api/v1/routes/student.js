@@ -1,5 +1,6 @@
 /*
   This module handles the student controller routes
+  @author Miracle Anyanwu
 */
 const router = require('express').Router();
 const StudentController = require('../Controllers/StudentsController');
@@ -17,6 +18,7 @@ const storage = cloudinaryStorage({
     crop: "limit"
   }]
 });
+
 const parser = multer({
   storage: storage
 });
